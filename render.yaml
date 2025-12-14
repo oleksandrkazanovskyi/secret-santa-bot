@@ -1,0 +1,20 @@
+# Render Blueprint - https://render.com/docs/blueprint-spec
+# This file allows one-click deployment to Render
+
+services:
+  - type: worker
+    name: secret-santa-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false  # User must set this manually in Render dashboard
+      - key: DATA_PATH
+        value: /data/data.json  # Path for persistent storage (requires Disk)
+    # Uncomment the following to attach a persistent disk ($0.25/GB/month)
+    # disk:
+    #   name: santa-data
+    #   mountPath: /data
+    #   sizeGB: 1
+
