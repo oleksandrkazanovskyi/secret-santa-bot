@@ -3,6 +3,8 @@ import random
 import os
 import json
 import html
+import asyncio
+from aiohttp import web
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 from telegram.ext import (
@@ -18,6 +20,7 @@ from telegram.ext import (
 # --- CONFIGURATION ---
 TOKEN = os.environ.get("BOT_TOKEN")
 DATA_FILE = os.environ.get("DATA_PATH", "data.json")
+PORT = int(os.environ.get("PORT", 10000))  # Render provides PORT env var
 IMAGE_URL = "https://res.cloudinary.com/aenetworks/image/upload/c_fill,ar_2,w_1920,h_960,g_auto/dpr_auto/f_auto/q_auto:eco/v1/christmas-gettyimages-184652817?_a=BAVAZGID0"
 
 # --- STATES FOR CONFIGURATION CONVERSATION ---
@@ -397,12 +400,35 @@ async def cancel_config(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 # ==============================================================================
+# HEALTH CHECK SERVER (for Render)
+# ==============================================================================
+
+async def health_check(request):
+    """Simple health check endpoint for Render."""
+    return web.Response(text="OK", status=200)
+
+async def run_health_server():
+    """Run a simple HTTP server for health checks."""
+    app = web.Application()
+    app.router.add_get("/", health_check)
+    app.router.add_get("/health", health_check)
+
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", PORT)
+    await site.start()
+    print(f"🌐 Health check сервер запущено на порті {PORT}")
+
+# ==============================================================================
 # MAIN EXECUTION
 # ==============================================================================
 
-if __name__ == '__main__':
+async def main():
     # Load existing games data from JSON file
     load_games()
+
+    # Start health check server in background
+    await run_health_server()
 
     app = ApplicationBuilder().token(TOKEN).build()
 
@@ -437,4 +463,15 @@ if __name__ == '__main__':
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND & filters.ChatType.PRIVATE, handle_wishlist_text))
 
     print("🤖 Бот запущено...")
-    app.run_polling()
+
+    # Initialize and start polling
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()
+
+    # Keep running forever
+    while True:
+        await asyncio.sleep(3600)
+
+if __name__ == '__main__':
+    asyncio.run(main())
