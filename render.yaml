@@ -12,8 +12,8 @@ services:
       - key: BOT_TOKEN
         sync: false  # User must set this manually in Render dashboard
       - key: DATA_PATH
-        value: data.json
-    # Uncomment the following to attach a persistent disk ($0.25/GB/month)
+        value: /data/data.json  # Uses persistent disk
+    # Persistent disk for data storage
     disk:
       name: santa-data
       mountPath: /data
