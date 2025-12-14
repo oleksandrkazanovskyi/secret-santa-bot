@@ -13,8 +13,8 @@ services:
       - key: DATA_PATH
         value: /data/data.json  # Path for persistent storage (requires Disk)
     # Uncomment the following to attach a persistent disk ($0.25/GB/month)
-    # disk:
-    #   name: santa-data
-    #   mountPath: /data
-    #   sizeGB: 1
+    disk:
+      name: santa-data
+      mountPath: /data
+      sizeGB: 1
 
