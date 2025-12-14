@@ -362,7 +362,7 @@ async def start_config(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await update.message.reply_text(
         f"⚙️ **Налаштування адміна**\n\n"
-        "1️⃣ Введи **Бюджет** (наприклад, '500 грн', 'Зроблено власними руками'):",
+        "1️⃣ Введи **Бюджет** (наприклад, '1000 грн', 'Зроблено власними руками'):",
         parse_mode='Markdown'
     )
     return BUDGET
