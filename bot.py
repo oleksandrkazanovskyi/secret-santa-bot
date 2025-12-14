@@ -355,7 +355,7 @@ async def start_config(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     # Security: Check if user is the admin stored in games
     if games.get(group_id, {}).get('admin_id') != update.effective_user.id:
-        await update.message.reply_text("🚫 Ти не є адміністратором цієї події.")
+        await update.message.reply_text("🚫 Ти не адміністратор цієї події.")
         return ConversationHandler.END
 
     context.user_data['config_group_id'] = group_id
