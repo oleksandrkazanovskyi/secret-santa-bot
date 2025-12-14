@@ -18,7 +18,7 @@ from telegram.ext import (
 # --- CONFIGURATION ---
 TOKEN = os.environ.get("BOT_TOKEN")
 DATA_FILE = os.environ.get("DATA_PATH", "data.json")
-IMAGE_URL = "https://cdn-icons-png.flaticon.com/512/6231/6231458.png"
+IMAGE_URL = "https://res.cloudinary.com/aenetworks/image/upload/c_fill,ar_2,w_1920,h_960,g_auto/dpr_auto/f_auto/q_auto:eco/v1/christmas-gettyimages-184652817?_a=BAVAZGID0"
 
 # --- STATES FOR CONFIGURATION CONVERSATION ---
 BUDGET, RULES, DEADLINE = range(3)
